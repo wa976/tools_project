@@ -11,8 +11,7 @@
 #define pause system("pause > nul")    
 #define cls system("cls") 
 
-#define KEY_DOWN(vk_code) ((GetAsyncKeyState(vk_code & 0x8000)?1:0))
-#define KEY_UP(vk_code) ((GetAsyncKeyState(vk_code & 0x8000)?0:1))
+
 
 
 int isEnd = 0;
@@ -24,7 +23,6 @@ void SetColor(int color);
 void mainPtr(void);
 void gotoxy(int x, int y);
 void CursorView(char show);
-void view_score();
 
 
 
@@ -38,10 +36,10 @@ unsigned __stdcall Thread_A(void* arg)
             isEnd = 1;
             break;
         }
-        else if ((GetAsyncKeyState(VK_SPACE) & 0x8000)) { // || ((GetAsyncKeyState(VK_SPACE) & 0x8001))) { 
+        else if ((GetAsyncKeyState(VK_SPACE) & 0x8000)) { 
             gotoxy(90, 8); printf("score = %d ", score);
             score++;
-            Sleep(100);
+            Sleep(200);
         }
         
     }
@@ -52,7 +50,6 @@ unsigned __stdcall Thread_A(void* arg)
 unsigned __stdcall Thread_B(void* arg)
 {
     while (1) {
-        //system("cls");
         int a = 0;
         int b = 0;
         a = rand() % 5 + 2; // 난수 생성(2~6초까지)
@@ -62,20 +59,18 @@ unsigned __stdcall Thread_B(void* arg)
         Sleep(b);
 
 
-        //system("cls");
         int c = 0;
         int d = 0;
         c = rand() % 5 + 2; // 난수 생성(2~6초까지)
         d = 600 * a;
         gotoxy(50, 4); printf("o      o\n");
-        //Sleep(100);
+        Sleep(100);
         state = 1;
         Sleep(d);
     }
     return 0;
 }
 
-//unsigned _stdcall Thread_C(void* arg)
 
 
 
@@ -120,7 +115,7 @@ int main(void)
 
     HANDLE th1 = (HANDLE)_beginthreadex(NULL, 0, Thread_A, 0, 0, NULL);
     HANDLE th2 = (HANDLE)_beginthreadex(NULL, 0, Thread_B, 0, 0, NULL);
-    //_beginthreadex(NULL, 0, Thread_C, 0, 0, NULL);
+    
 
 
     int count = 60;
@@ -133,8 +128,13 @@ int main(void)
             count = count - 1;
             Sleep(1000);
         }
-        if (count < 10) {
+        if (count == 9) {
             cls;
+            gotoxy(11, 8); printf("%d", count);
+            count = count - 1;
+            Sleep(1000);
+        }
+        if (count < 9) {
             gotoxy(11, 8); printf("%d", count);
             count = count - 1;
             Sleep(1000);
@@ -159,7 +159,7 @@ int main(void)
 
 
 void mainPtr(void) {
-    system("mode con: cols=106 lines=9");   //참고로 cols 2단위가 특수문자 또는 한글 1글자다.
+    system("mode con: cols=106 lines=9");  
     system("title 선생님 몰래 춤추기");
     puts("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
     puts("■                                                                                                      ■");
